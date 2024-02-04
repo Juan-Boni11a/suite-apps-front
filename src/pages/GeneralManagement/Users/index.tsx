@@ -1,4 +1,4 @@
-import { Button, Card, Form, Image, Modal, Table } from "antd";
+import { Button, Card, Form, Image, Modal, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { getData } from "../../../services/common/getData";
 import UserForm from "../../../components/Forms/UserForm";
@@ -6,6 +6,7 @@ import RoleAssignmentForm from "../../../components/Forms/RoleAssignmentForm";
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/es'
 import { useNavigate } from "react-router-dom";
+import { putData } from "../../../services/common/putData";
 
 dayjs.locale('es')
 
@@ -27,17 +28,37 @@ function UsersPage() {
 
     async function initialRequest() {
         setLoading(true)
-        const request = await getData('api/users')
+        const request = await getData('api/users?includeInactive=' + true)
         console.log('r', request)
         if (request.length > 0) {
             setUsers(request)
             setLoading(false)
+        }else{
+            setLoading(false)
         }
+
+        
     }
 
     useEffect(() => {
         initialRequest()
     }, [refresh])
+
+
+
+    async function handleChangeState(user: any) {
+        console.log('user', user)
+
+        const request = await putData('api/users/' + user.id + "/change_state", {
+            ...user,
+            active: !user.active
+        })
+
+        if('name' in request){
+            setRefresh(!refresh)
+        }
+
+    }
 
     const handleModal = () => setOpenModal(!openModal)
 
@@ -54,7 +75,7 @@ function UsersPage() {
                         width={75}
                         src={record.avatarUrl}
                     />
-                ): (
+                ) : (
                     <Image
                         width={75}
                         src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"
@@ -88,16 +109,57 @@ function UsersPage() {
             key: "phone_number",
         },
         {
+            title: 'Rol',
+            key: 'A',
+            render: (record: any) => (
+                'role' in record && record.role !== null ? (
+                    <>
+
+                        {record.role.id === 1 && <Tag color="blue">ADMINISTRADOR</Tag>}
+
+                        {record.role.id === 2 && <Tag color="green">CLIENTE</Tag>}
+
+                        {record.role.id === 3 && <Tag color="orange">CONDUCTOR</Tag>}
+                    </>
+
+                ) : (
+                    <Tag color="green">CLIENTE</Tag>
+                )
+
+            ),
+        },
+        {
+            title: 'Estado',
+            key: 'B',
+            render: (record: any) => (
+                'active' in record && (
+                    <>
+                        {record.active ? <Tag color="blue">ACTIVO</Tag> : <Tag color="red">INACTIVO</Tag>}
+                    </>
+
+                )
+
+            ),
+        },
+        {
             title: 'Acciones',
             key: 'X',
             render: (record: any) => (
-                <Button type="primary" onClick={() => {
-                    console.log('r', record)
-                    setSelectedUser(record)
-                    handleRoleModal(record)
-                }}>
-                    Asignar rol
-                </Button>
+                <>
+                    <Button style={{ display: 'block', marginBottom: 12}} type="primary" onClick={() => {
+                        console.log('r', record)
+                        setSelectedUser(record)
+                        handleRoleModal(record)
+                    }}>
+                        Asignar rol
+                    </Button>
+                    <Button type="primary" onClick={() => {
+                        console.log('r', record)
+                        handleChangeState(record)
+                    }}>
+                        {record.active ? 'Desactivar usuario' : 'Activar usuario' }
+                    </Button>
+                </>
             )
         }
     ];

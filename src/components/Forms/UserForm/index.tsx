@@ -64,6 +64,11 @@ function UserForm({ handleModal, handleRefresh }: any) {
             return;
         }
 
+        if ('error' in request){
+            message.error(request.error)
+            return;
+        }
+
         message.error("Algo salió mal")
     }
 

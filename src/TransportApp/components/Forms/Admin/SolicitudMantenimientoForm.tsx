@@ -87,7 +87,7 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
 
 
     async function initialRequest() {
-        const usersRequest = await getData('api/users')
+        const usersRequest = await getData('api/users?includeInactive=' + true)
         console.log('ur', usersRequest)
         if (Array.isArray(usersRequest)) {
 

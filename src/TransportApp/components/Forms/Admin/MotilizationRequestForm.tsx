@@ -86,7 +86,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
     }, [])
 
     const initialRequest = async () => {
-        const usersRequest = await getData('api/users')
+        const usersRequest = await getData('api/users?includeInactive=' + true)
         console.log('ur', usersRequest)
         if (Array.isArray(usersRequest)) {
             const usersToSelect = usersRequest.map((user: any) => {
