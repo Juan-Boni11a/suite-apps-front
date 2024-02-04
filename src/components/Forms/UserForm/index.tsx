@@ -1,7 +1,8 @@
-import { Button, Form, Input, Row, Upload, message } from "antd";
+import { Button, Col, DatePicker, Form, Input, Row, Select, Upload, message } from "antd";
 import { postData } from "../../../services/common/postData";
 import { useState } from "react";
 import { uploadFileToCloudinary } from "../../../HemerotecApp/utils/uploader";
+import * as dayjs from 'dayjs'
 
 
 const getBase64 = (img: any, callback: any) => {
@@ -26,14 +27,14 @@ const beforeUpload = (file: any) => {
 const defaultRules = [{ required: true, message: 'Información requerida' }]
 
 
-function UserForm({ handleModal, handleRefresh }: any) {
+function UserForm({ handleModal, handleRefresh, toDriver = false }: any) {
 
     const handleFinish = async (values: any) => {
         console.log('values', values)
-        
+
         let fullData = {
             ...values,
-            role: { id: 2 }
+            role: toDriver ? { id: 3 } : { id: 2 }
         }
 
         if (values.imagen) {
@@ -44,7 +45,7 @@ function UserForm({ handleModal, handleRefresh }: any) {
             imageForm.append("upload_preset", uploadPreset);
 
             const uploadedImage = await uploadFileToCloudinary(imageForm)
-            
+
             if (!uploadedImage) {
                 message.error("Algo ha salido mal procesando la imagen :( , por favor intenta de nuevo")
                 return
@@ -54,7 +55,7 @@ function UserForm({ handleModal, handleRefresh }: any) {
         }
 
         console.log('fullData', fullData)
-        
+
         const request = await postData('api/users', fullData)
 
         if ('name' in request) {
@@ -64,7 +65,7 @@ function UserForm({ handleModal, handleRefresh }: any) {
             return;
         }
 
-        if ('error' in request){
+        if ('error' in request) {
             message.error(request.error)
             return;
         }
@@ -104,6 +105,12 @@ function UserForm({ handleModal, handleRefresh }: any) {
     );
 
 
+    const disabledDate = (current: any) => {
+        return current && dayjs(current).isBefore(dayjs(), 'day');
+    };
+
+
+
     return (
         <Form onFinish={handleFinish} >
             <Form.Item label="Imagen de la noticia" name="imagen">
@@ -141,6 +148,32 @@ function UserForm({ handleModal, handleRefresh }: any) {
             <Form.Item label="Contraseña" name="password" rules={defaultRules}>
                 <Input />
             </Form.Item>
+
+
+            {
+                toDriver && (
+                    <>
+                        <Form.Item label="Tipo de licencia" name="licenseType" rules={defaultRules} >
+                            <Select options={[
+                                { label: 'A', value: 'A' },
+                                { label: 'B', value: 'B' },
+                                { label: 'F', value: 'F' },
+                                { label: 'A1', value: 'A1' },
+                                { label: 'C', value: 'C' },
+                                { label: 'C1', value: 'C1' },
+                                { label: 'D', value: 'D' },
+                                { label: 'D1', value: 'D1' },
+                                { label: 'E', value: 'E' },
+                                { label: 'E1', value: 'E1' },
+                                { label: 'G', value: 'G' }
+                            ]}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Fecha" name="licenceExpiryDate" rules={defaultRules}>
+                            <DatePicker disabledDate={disabledDate} />
+                        </Form.Item>
+                    </>
+                )}
 
             <Row justify="end" >
                 <Button htmlType="submit" type="primary">Guardar</Button>

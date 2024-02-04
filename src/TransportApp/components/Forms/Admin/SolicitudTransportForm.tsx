@@ -51,7 +51,7 @@ function SolicitudTransportForm({handleModal, handleRefresh}: any) {
     }, [])
 
     const initialRequest = async () => {
-        const usersRequest = await getData('api/users?includeInactive=' + true)
+        const usersRequest = await getData('api/users?includeInactive=' + false)
         console.log('ur', usersRequest)
         if (Array.isArray(usersRequest)) {
             const usersToSelect = usersRequest.map((user: any) => {

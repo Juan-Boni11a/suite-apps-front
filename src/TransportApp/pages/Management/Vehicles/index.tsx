@@ -12,8 +12,14 @@ import { putData } from "../../../../services/common/putData"
 function VehicleForm({handleModal, handleRefresh, form, selectedRecord}: any){
 
     const handleFinish = async (values: any) => {
+
+        const cleanData = {
+            ...values,
+            status: 'USO'
+        }
+
         if(selectedRecord!==null){
-            const request = await putData('api/vehicles/' + selectedRecord.id, values)
+            const request = await putData('api/vehicles/' + selectedRecord.id, cleanData)
             if('plate' in request){
                 message.success("Vehículo actualizado exitosamente")
                 handleModal()
@@ -22,12 +28,20 @@ function VehicleForm({handleModal, handleRefresh, form, selectedRecord}: any){
             }
             return
         }
-        const request = await postData('api/vehicles', values)
+        const request = await postData('api/vehicles', cleanData)
         if('plate' in request){
             message.success("Vehículo agregado exitosamente")
             handleModal()
             handleRefresh()
+            return
         }
+
+        if ('error' in request) {
+            message.error(request.error)
+            return;
+        }
+
+        message.error("Algo salió mal")
     }
 
     return(
@@ -52,9 +66,6 @@ function VehicleForm({handleModal, handleRefresh, form, selectedRecord}: any){
                 <Input />
             </Form.Item>
 
-            <Form.Item label="Estado" name="status" rules={[{ required: true, message: 'Informació requerida' }]} >
-                <Select options={ [ { label: 'En uso', value: 'USO' } ] } />
-            </Form.Item>
 
             <Row justify="end" >
                 <Button htmlType="submit" type="primary">Guardar</Button>

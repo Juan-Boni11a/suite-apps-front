@@ -86,7 +86,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
     }, [])
 
     const initialRequest = async () => {
-        const usersRequest = await getData('api/users?includeInactive=' + true)
+        const usersRequest = await getData('api/users?includeInactive=' + false)
         console.log('ur', usersRequest)
         if (Array.isArray(usersRequest)) {
             const usersToSelect = usersRequest.map((user: any) => {
@@ -265,9 +265,34 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
         return current && dayjs(current).isBefore(dayjs(), 'day');
     };
 
-    const disabledHours = () => {
+
+    const emitDateValue = Form.useWatch('emitDate', form)
+    
+    const disabledEmitHours = () => {
         const currentHour = dayjs().hour();
-        // Deshabilitar todas las horas antes de la actual, antes de las 8am y después de las 6pm
+      
+        if (!emitDateValue || !dayjs(emitDateValue).isSame(dayjs(), 'day')) {
+          // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
+          return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
+        }
+      
+        // Deshabilitar todas las horas antes de la actual, antes de las 8 am y después de las 6 pm
+        return [...Array(currentHour).keys(), ...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
+    };
+
+
+
+    const expiryDateValue = Form.useWatch('expiryDate', form)
+
+    const disabledExpiryHours = () => {
+        const currentHour = dayjs().hour();
+      
+        if (!expiryDateValue || !dayjs(expiryDateValue).isSame(dayjs(), 'day')) {
+          // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
+          return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
+        }
+      
+        // Deshabilitar todas las horas antes de la actual, antes de las 8 am y después de las 6 pm
         return [...Array(currentHour).keys(), ...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
     };
 
@@ -401,7 +426,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
                         <Form.Item label="Hora" name="emitHour">
                             <DatePicker
                                 picker="time"
-                                disabledHours={disabledHours}
+                                disabledHours={disabledEmitHours}
                                 disabledMinutes={disabledMinutes}
                                 disabledSeconds={disabledSeconds}
                             />
@@ -421,7 +446,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
                         <Form.Item label="Hora" name="expiryHour">
                             <DatePicker
                                 picker="time"
-                                disabledHours={disabledHours}
+                                disabledHours={disabledExpiryHours}
                                 disabledMinutes={disabledMinutes}
                                 disabledSeconds={disabledSeconds}
                             />

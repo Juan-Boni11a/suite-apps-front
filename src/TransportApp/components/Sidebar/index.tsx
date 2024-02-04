@@ -77,6 +77,14 @@ const MenuOptions = ({ theme = "dark", closeModal = () => console.log('Default c
                         </Menu.Item>
                         <Typography.Text style={{ color: 'white' }} >Administración</Typography.Text>
                         <Menu.Item
+                            key="5"
+                            className="navbar-brand"
+                            onClick={() => goToPage("/transports/conductores")}
+                        >
+                            Conductores
+                        </Menu.Item>
+                        
+                        <Menu.Item
                             key="6"
                             className="navbar-brand"
                             onClick={() => goToPage("/transports/vehiculos")}
@@ -117,6 +125,13 @@ const MenuOptions = ({ theme = "dark", closeModal = () => console.log('Default c
                             onClick={() => goToPage("/transports/vigenciasMovilizacion")}
                         >
                             Vigencias de movilización
+                        </Menu.Item>
+                        <Menu.Item
+                            key="13"
+                            className="navbar-brand"
+                            onClick={() => goToPage("/transports/actividades")}
+                        >
+                            Actividades
                         </Menu.Item>
 
                     </>

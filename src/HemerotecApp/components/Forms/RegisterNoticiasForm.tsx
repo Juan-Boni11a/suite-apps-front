@@ -96,6 +96,10 @@ const RegisterNoticiasForm = () => {
         setFileList(cleanNfl);
     };
 
+
+    const currentDate = dayjs();
+
+
     const handleSubmit = async (values: any) => {
         // setSubmitting(true)
 
@@ -137,7 +141,7 @@ const RegisterNoticiasForm = () => {
         const { id } = values;
         const cleanValues = {
             id,
-            dateRegister: transformDate(values.dateRegister),
+            dateRegister: transformDate(currentDate),
             nameResp: user && (user.name + " " + user.lastname),
             emitNoticia: transformDate(values.emitNoticia),
             seccion: values.seccion,
@@ -302,8 +306,7 @@ const RegisterNoticiasForm = () => {
 
     const handleShowForm = () => setShowForm((prevState: any) => !prevState)
 
-    const currentDate = dayjs();
-
+    
     const sectorValue = Form.useWatch('sectorNoti', form);
 
 

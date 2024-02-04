@@ -87,7 +87,7 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
 
 
     async function initialRequest() {
-        const usersRequest = await getData('api/users?includeInactive=' + true)
+        const usersRequest = await getData('api/users?includeInactive=' + false)
         console.log('ur', usersRequest)
         if (Array.isArray(usersRequest)) {
 
@@ -161,7 +161,7 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
         console.log('values', values)
         setSubmitting(true)
 
-        const { currentActivity, currentResponsible, date, hour, driver, plate, serviceStation, workType, status } = values;
+        const { currentActivity, currentResponsible, date, hour, driver, plate, serviceStation, workType, status="ACEPTADA" } = values;
 
         const driverId = drivers.filter((dr: any) => dr.fullName === driver)
         const vehicleId = vehicles.filter((ve: any) => ve.plate === plate)
@@ -209,7 +209,7 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
         } else {
             cleanValues['initiatorId'] = { id: user.id }
             cleanValues['requester'] = { id: user.id }
-            cleanValues['status'] = 'PENDIENTE'
+            //cleanValues['status'] = 'PENDIENTE'
 
             const request = await postData('api/maintenanceRequests', cleanValues)
             if ('requester' in request) {
@@ -248,11 +248,19 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
         return current && dayjs(current).isBefore(dayjs(), 'day');
     };
 
+    const dateValue = Form.useWatch('date', form)
+    
     const disabledHours = () => {
         const currentHour = dayjs().hour();
-        // Deshabilitar todas las horas antes de la actual, antes de las 8am y después de las 6pm
+      
+        if (!dateValue || !dayjs(dateValue).isSame(dayjs(), 'day')) {
+          // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
+          return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
+        }
+      
+        // Deshabilitar todas las horas antes de la actual, antes de las 8 am y después de las 6 pm
         return [...Array(currentHour).keys(), ...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
-    };   
+      };
 
     const disabledMinutes = (selectedHour: any) => {
         if (selectedHour === dayjs().hour()) {
@@ -353,9 +361,6 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
                 <br />
                 */
             }
-            <Form.Item label="Acciones a tomar" name="status">
-                <Select options={actions} />
-            </Form.Item>
 
             {selectedRequest && (
                 <MaintenanceLogs requestId={selectedRequest.id} />

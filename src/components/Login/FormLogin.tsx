@@ -27,16 +27,20 @@ export const FormLogin = () => {
                 }
             }
             */
-            
+
             // const resp = await postData('api/users', datarequest)
             console.log('resp', resp)
-            if ('token' in resp && resp.token!=="") {
-                const { token } = resp
-                localStorage.setItem("userData", JSON.stringify(resp.userData));
-                localStorage.setItem("token", token);
-                login(resp.userData)
-                message.success(`Bienvenido`)
-                
+            if ('token' in resp && resp.token !== "") {
+                if (resp.userData.active) {
+                    const { token } = resp
+                    localStorage.setItem("userData", JSON.stringify(resp.userData));
+                    localStorage.setItem("token", token);
+                    login(resp.userData)
+                    message.success(`Bienvenido`)
+                }else{
+                    message.warning("Su usuario ha sido bloqueado, por favor contáctese con el administrador del sistema")
+                }
+
             } else {
                 message.error("Credenciales incorrectas");
                 //message.error(resp.msg);
@@ -72,7 +76,6 @@ export const FormLogin = () => {
                     label="Password"
                     name="password"
                     rules={[{ required: true, message: 'Por favor ingrese su contraseña!' }]}
-                    extra={<a onClick={() => navigate("/forget-password")}>Olvidé mi contraseña</a>}
                 >
                     <Input.Password />
                 </Form.Item>

@@ -18,6 +18,8 @@ import MovilizationTosPage from "../../pages/Management/MovilizationTos";
 import MovilizationValiditiesPage from "../../pages/Management/MovilizationValidities";
 import RegisterNoticiasPage from "../../pages/RegisterNoticiasPage";
 import Dashboard from "../../pages/Dashboard";
+import DriversPage from "../../pages/Management/Drivers";
+import ActivitiesPage from "../../pages/Management/Activities";
 
 function WelcomePage() {
   return (
@@ -51,13 +53,14 @@ const AuthenticatedNavigation = () => {
             <Route path="registerNoticias" element={<RegisterNoticiasPage />} />
 
 
-            <Route path="vehiculos" element={<VehiclesPage />} />
+            <Route path="conductores" element={<DriversPage />} />
+            <Route path="vehiculos"  element={<VehiclesPage />} />
             <Route path="ciudades" element={<CitiesPage />} />
             <Route path="estaciones" element={<StationsPage />} />
             <Route path="tiposMovilizacion" element={<MovilizationTypesPage />} />
             <Route path="parasMovilizacion" element={<MovilizationTosPage />} />
             <Route path="vigenciasMovilizacion" element={<MovilizationValiditiesPage />} />
-
+            <Route path="actividades" element={<ActivitiesPage />} />
 
           </Routes>
         </SideBar>
