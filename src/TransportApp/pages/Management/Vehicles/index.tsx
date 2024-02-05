@@ -156,6 +156,7 @@ const columns: any = [
 
     const handleModal = () => {
         setOpenModal(!openModal)
+        form.resetFields()
     }
 
     

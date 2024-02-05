@@ -72,7 +72,10 @@ function ActivitiesPage(){
         initialRequest()
     }, [refresh])
 
-    const handleModal = () => setOpenModal(!openModal)
+    const handleModal = () => {
+        setOpenModal(!openModal)
+        form.resetFields()
+    }
 
     const handleRefresh = () => setRefresh(!refresh)
 

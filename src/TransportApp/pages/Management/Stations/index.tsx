@@ -44,7 +44,7 @@ function StationForm({ handleModal, handleRefresh, form, selectedRecord }: any) 
 
     const [cities, setCities] = useState<any>([])
 
-    const [selectedType, setSelectedType] = useState('')
+    const [selectedType, setSelectedType] = useState( selectedRecord !== null ? selectedRecord.type : '')
 
     
 
@@ -154,7 +154,10 @@ function StationsPage() {
         initialRequest()
     }, [refresh])
 
-    const handleModal = () => setOpenModal(!openModal)
+    const handleModal = () => {
+        setOpenModal(!openModal)
+        form.resetFields()
+    }
 
     const handleRefresh = () => setRefresh(!refresh)
 
@@ -183,10 +186,20 @@ function StationsPage() {
 
     const handleOpenModal = (record: any = null) => {
         if(record!==null){
-            const {name } = record;
+            console.log('record', record)
+            const {name, city, type } = record;
 
             form.setFieldValue('name', name)
+            form.setFieldValue('city', city.id)
+            form.setFieldValue('type', type)
+            if(type==="SUPPLY"){
+                form.setFieldValue('fuelType', record.fuelType)
+            
+            }
 
+            if(type==="MAINTENANCE"){
+                form.setFieldValue('activities', record.activities)
+            }
             setSelectedRecord(record)
        
         }

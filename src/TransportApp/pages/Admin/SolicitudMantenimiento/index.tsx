@@ -57,6 +57,7 @@ const SolicitudMantenimientoPage = () => {
 
     function handleModal() {
         setShowModal(!showModal)
+        form.resetFields()
     }
 
     function handleRefresh() {

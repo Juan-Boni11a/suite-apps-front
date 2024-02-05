@@ -29,6 +29,8 @@ const defaultRules = [{ required: true, message: 'Información requerida' }]
 
 function UserForm({ handleModal, handleRefresh, toDriver = false }: any) {
 
+    const [form] = Form.useForm()
+
     const handleFinish = async (values: any) => {
         console.log('values', values)
 
@@ -60,6 +62,8 @@ function UserForm({ handleModal, handleRefresh, toDriver = false }: any) {
 
         if ('name' in request) {
             message.success("Usuario creado exitosamente")
+            form.resetFields()
+            setImageUrl(undefined)
             handleModal()
             handleRefresh()
             return;
@@ -112,7 +116,7 @@ function UserForm({ handleModal, handleRefresh, toDriver = false }: any) {
 
 
     return (
-        <Form onFinish={handleFinish} >
+        <Form form={form} onFinish={handleFinish} >
             <Form.Item label="Imagen de la noticia" name="imagen">
                 <Upload
                     name="avatar"

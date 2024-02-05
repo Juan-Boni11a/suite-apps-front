@@ -35,6 +35,7 @@ function MovilizationToForm({handleModal, handleRefresh, selectedRecord, form}: 
             message.success("Registro agregado exitosamente")
             handleModal()
             handleRefresh()
+            return
         }
         message.error("Ya existe un registro con ese nombre!")
  
@@ -84,8 +85,10 @@ function MovilizationTosPage(){
         initialRequest()
     }, [refresh])
 
-    const handleModal = () => setOpenModal(!openModal)
-
+    const handleModal = () => {
+        setOpenModal(!openModal)
+        form.resetFields()
+    }
     const handleRefresh = () => setRefresh(!refresh)
 
 

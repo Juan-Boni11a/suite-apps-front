@@ -13,7 +13,7 @@ const columns = [
 ]
 
 
-function MovilizationValidityForm({ handleModal, handleRefresh }: any) {
+function MovilizationValidityForm({ handleModal, handleRefresh, form }: any) {
 
     const handleFinish = async (values: any) => {
         const request = await postData('api/movilizationValidities', values)
@@ -27,7 +27,7 @@ function MovilizationValidityForm({ handleModal, handleRefresh }: any) {
     }
 
     return (
-        <Form onFinish={handleFinish}>
+        <Form form={form} onFinish={handleFinish}>
             <Form.Item label="Nombre" name="name" rules={[{ required: true, message: 'Informació requerida' }]} >
                 <Input />
             </Form.Item>
@@ -42,6 +42,9 @@ function MovilizationValidityForm({ handleModal, handleRefresh }: any) {
 
 
 function MovilizationValiditiesPage() {
+
+    const [form] = Form.useForm()
+
 
     const [data, setData] = useState<any>([])
     const [loading, setLoading] = useState(false)
@@ -65,7 +68,10 @@ function MovilizationValiditiesPage() {
         initialRequest()
     }, [refresh])
 
-    const handleModal = () => setOpenModal(!openModal)
+    const handleModal = () => {
+        setOpenModal(!openModal)
+        form.resetFields()
+    }
 
     const handleRefresh = () => setRefresh(!refresh)
 
@@ -75,7 +81,7 @@ function MovilizationValiditiesPage() {
             <Table loading={loading} dataSource={data} columns={columns} />
 
             <Modal title="Vigencia" open={openModal} onCancel={handleModal} footer={null}>
-                <MovilizationValidityForm handleModal={handleModal} handleRefresh={handleRefresh} />
+                <MovilizationValidityForm handleModal={handleModal} handleRefresh={handleRefresh} form={form} />
             </Modal>
 
         </Card>

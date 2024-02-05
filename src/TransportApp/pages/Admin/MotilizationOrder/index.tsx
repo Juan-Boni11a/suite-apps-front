@@ -108,6 +108,7 @@ const MovilizationOrderPage = () => {
 
     function handleModal() {
         setShowModal(!showModal)
+        form.resetFields()
     }
 
     function handleRefresh() {
@@ -204,7 +205,7 @@ const MovilizationOrderPage = () => {
                         type="primary"
                         style={{ marginBottom: 16 }}
                     >
-                        {record.driver === null ? "Completar" : "Editar"}
+                        {record.driver === null && record.status !== "REJECTED" ? "Completar" : "Editar"}
                     </Button>
 
                 ),

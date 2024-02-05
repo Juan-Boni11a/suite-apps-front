@@ -136,7 +136,8 @@ function DriversPage() {
                     <Button type="primary" onClick={() => {
                         console.log('r', record)
                         handleChangeState(record)
-                    }}>
+                    }}
+                    style={{ marginBottom: 12 }}>
                         {record.active ? 'Desactivar conductor' : 'Activar conductor'}
                     </Button>
 

@@ -168,7 +168,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
         if (selectedRequest && isAdmin) {
 
             let cleanValues: any = {
-                status: values.status
+                status: values.status,
             }
             console.log('aaaa', values.status)
             if (values.status === "ACCEPTED") {
@@ -186,6 +186,13 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
                 }
             }
 
+
+            if(values.status === "REJECTED"){
+                cleanValues = {
+                    ...cleanValues,
+                    rejectedDue: values.rejectedDue
+                }
+            }
 
 
             const request = await putData('api/movilizationRequests/' + selectedRequest.id, cleanValues)
@@ -344,6 +351,13 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
                         <Form.Item label="Estado" name="status">
                             <Select options={statusList} />
                         </Form.Item>
+
+
+                        {statusValue === "REJECTED" && (
+                            <Form.Item label="Razón" name="rejectedDue">
+                                <Input />
+                            </Form.Item>
+                        )}
 
                         {statusValue !== "REJECTED" && (
                             <>
