@@ -39,18 +39,31 @@ function Dashboard() {
         {
             title: "Ruta",
             key: "x",
-            render: (record: any) => <span>{record.emitPlace + "-" + record.expiryPlace}</span>
+            render: (record: any) => <>
+                {'emitPlace' in record && <span>{record.emitPlace + "-" + record.expiryPlace}</span>}
+            </>
         },
         {
             title: "Fecha de salida",
             key: "x",
-            render: (record: any) => <span>{record.emitDate + "-" + record.emitHour}</span>
+            render: (record: any) => <>
+                {'emitDate' in record && <span>{record.emitDate + "-" + record.emitHour}</span>}
+            </>
         },
         {
             title: "Fecha de llegada",
             key: "x",
-            render: (record: any) => <span>{record.expiryDate + "-" + record.expiryHour}</span>
+            render: (record: any) => <>
+                {'expiryDate' in record && <span>{record.expiryDate + "-" + record.expiryHour}</span>}
+            </>
         },
+        {
+            title: 'Fecha de mantenimiento',
+            key: "y",
+            render: (record: any) => <>
+                {'date' in record && <span>{record.date + "-" + record.hour}</span>}
+            </>
+        }
 
     ];
 
@@ -112,28 +125,64 @@ function Dashboard() {
         console.log('request dim', requestDriversInMovilization)
         if (Array.isArray(requestDriversInMovilization) && requestDriversInMovilization.length > 0) {
 
-            if (Array.isArray(requestDriversInMovilization[0])) {
+            requestDriversInMovilization.map((r) => {
+                if (Array.isArray(r)) {
 
-                let objetosCombinados = [];
-
-                for (let i = 0; i < requestDriversInMovilization[0].length; i += 2) {
-                    if (i + 1 < requestDriversInMovilization[0].length) {
-                        let objetoCombinado = { ...requestDriversInMovilization[0][i], ...requestDriversInMovilization[0][i + 1] };
-                        objetosCombinados.push(objetoCombinado);
-                    } else {
-                        // Si hay un número impar de objetos, el último objeto se agrega sin combinar
-                        objetosCombinados.push(requestDriversInMovilization[0][i]);
+                    let objetosCombinados = [];
+    
+                    for (let i = 0; i < r.length; i += 2) {
+                        if (i + 1 < r.length) {
+                            let objetoCombinado = { ...r[i], ...r[i + 1] };
+                            objetosCombinados.push(objetoCombinado);
+                        } else {
+                            // Si hay un número impar de objetos, el último objeto se agrega sin combinar
+                            objetosCombinados.push(r[i]);
+                        }
                     }
+    
+                    console.log('objetos combinados', objetosCombinados)
+                    setDriversInMovilization(objetosCombinados)
+                    setLoadingDriversInMovilization(false)
+                } else {
+                    setLoadingDriversInMovilization(false)
                 }
+            })
+        } else {
+            setLoadingDriversInMovilization(false)
+        }
 
-                console.log('objetos combinados', objetosCombinados)
-                setDriversInMovilization(objetosCombinados)
-                setLoadingDriversInMovilization(false)
-            }else{
-                setLoadingDriversInMovilization(false)
-            }
 
-        }else{
+        setLoadingDriversInMovilization(true)
+        const requestDriversInMaintenance = await getData('api/users/driversInMaintenance')
+        console.log('request man', requestDriversInMaintenance)
+        if (Array.isArray(requestDriversInMaintenance) && requestDriversInMaintenance.length > 0) {
+
+            requestDriversInMaintenance.map((r) => {
+                if (Array.isArray(r)) {
+
+                    let objetosCombinados: any = [];
+
+                    for (let i = 0; i < r.length; i += 2) {
+                        if (i + 1 < r.length) {
+                            let objetoCombinado = { ...r[i], ...r[i + 1] };
+                            objetosCombinados.push(objetoCombinado);
+                        } else {
+                            // Si hay un número impar de objetos, el último objeto se agrega sin combinar
+                            objetosCombinados.push(r[i]);
+                        }
+                    }
+
+                    console.log('objetos combinados', objetosCombinados)
+                    setDriversInMovilization((prevState: any) => [...prevState, ...objetosCombinados])
+                    setLoadingDriversInMovilization(false)
+                } else {
+                    setLoadingDriversInMovilization(false)
+                }
+            })
+
+
+
+        } else {
             setLoadingDriversInMovilization(false)
         }
 
