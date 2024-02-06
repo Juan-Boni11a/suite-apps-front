@@ -20,21 +20,33 @@ function Dashboard() {
     const [driversInMovilization, setDriversInMovilization] = useState<any>([])
     const [loadingDriversInMovilization, setLoadingDriversInMovilization] = useState(true)
 
+    const [todayMovilizations, setTodayMovilizations] = useState<any>([])
+    const [loadingTodayMovilizations, setLoadingTodayMovilizations] = useState(true)
+
+    const [todayMaintenances, setTodayMaintenances] = useState<any>([])
+    const [loadingTodayMaintenances, setLoadingTodayMaintenances] = useState(true)
+
     const columns = [
         {
             title: "Nombre",
-            dataIndex: "name",
-            key: "name",
+            key: "a",
+            render: (record: any) => <>
+                {'driver' in record && <span>{record.driver.name}</span>}
+            </>
         },
         {
             title: "Apellido",
-            dataIndex: "lastname",
-            key: "lastname",
+            key: "b",
+            render: (record: any) => <>
+                {'driver' in record && <span>{record.driver.lastname}</span>}
+            </>
         },
         {
             title: "Número de teléfono",
-            dataIndex: "phone_number",
-            key: "phone_number",
+            key: 'c',
+            render: (record: any) => <>
+                {'driver' in record && <span>{record.driver.phone_number}</span>}
+            </>
         },
         {
             title: "Ruta",
@@ -121,6 +133,7 @@ function Dashboard() {
             setLoadingDdata(false)
         }
 
+        /*
         const requestDriversInMovilization = await getData('api/users/driversInMovilization')
         console.log('request dim', requestDriversInMovilization)
         if (Array.isArray(requestDriversInMovilization) && requestDriversInMovilization.length > 0) {
@@ -185,7 +198,19 @@ function Dashboard() {
         } else {
             setLoadingDriversInMovilization(false)
         }
+        */
 
+        const requestTodayMovilizationRequests = await getData('api/movilizationRequests/today')
+        if (Array.isArray(requestTodayMovilizationRequests)) {
+            setTodayMovilizations(requestTodayMovilizationRequests)
+            setLoadingTodayMovilizations(false)
+        }
+
+        const requestTodayMaintenances = await getData('api/maintenanceRequests/today')
+        if (Array.isArray(requestTodayMaintenances)) {
+            setTodayMaintenances(requestTodayMaintenances)
+            setLoadingTodayMaintenances(false)
+        }
     }
 
     useEffect(() => {
@@ -198,7 +223,7 @@ function Dashboard() {
             <Row>
                 <Col span={24}>
                     <Card title="Conductores en servicio">
-                        <Table columns={columns} dataSource={driversInMovilization} loading={loadingDriversInMovilization} />
+                        <Table columns={columns} dataSource={[...todayMovilizations, ...todayMaintenances]} loading={loadingTodayMovilizations && loadingTodayMaintenances} />
                     </Card>
 
                 </Col>
