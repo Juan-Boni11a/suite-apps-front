@@ -15,8 +15,7 @@ import MovilizationDetails from "../../MovilizationDetails";
 
 
 const activities = [
-    { label: 'Ingreso de datos', key: 1, value: 'Ingreso de datos' },
-    { label: 'Asignación de conductor', key: 2, value: 'Asignación de conductor' }
+    { label: 'Aprobación/Asignación', key: 1, value: 'Aprobación/Asignación' }
 ]
 
 const places = [
@@ -366,7 +365,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
                                 </Form.Item>
 
                                 <Form.Item label="Actividad actual" name="currentActivity" >
-                                    <Select options={activities} />
+                                    <Select  options={activities}  />
                                 </Form.Item>
 
 

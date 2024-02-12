@@ -41,8 +41,8 @@ const sectors = [
 
 
 const tipoInformacion = [
-    { label: 'Local', value: "Local" },
-    { label: 'Actual', value: "Actual" }
+    { label: 'Opinión', value: "Opinión" },
+    { label: 'Investigación', value: "Investigación" }
 ]
 const medioComunicacion = [
     { label: 'Digital', value: "Digital" },
@@ -337,7 +337,7 @@ const RegisterNoticiasForm = () => {
 
                         <Col span={24}>
                             <Form.Item label="Seccion" name="seccion">
-                                <InputNumber style={{ width: '90%' }} />
+                            <Input></Input>
                             </Form.Item>
 
                         </Col>
@@ -345,7 +345,7 @@ const RegisterNoticiasForm = () => {
                         <Col span={24} >
 
                             <Form.Item label="No. Pagina" name="numPage">
-                                <InputNumber style={{ width: '90%' }} />
+                                <InputNumber style={{ width: '40%' }} />
                             </Form.Item>
                         </Col>
 

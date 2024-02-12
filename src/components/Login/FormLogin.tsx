@@ -18,27 +18,16 @@ export const FormLogin = () => {
             setLoading(true);
             const datarequest = { email: values.email, password: values.password };
             const resp = await postData('api/login', datarequest)
-            /*
-            let resp: any = {}
-            if (datarequest.email === "admin@mail.com" && datarequest.password === "123123") {
-                resp = {
-                    userData: datarequest,
-                    token: 'ey1232131'
-                }
-            }
-            */
-
-            // const resp = await postData('api/users', datarequest)
-            console.log('resp', resp)
+            
             if ('token' in resp && resp.token !== "") {
-                if (resp.userData.active) {
+                if (resp.userData.active && resp.userData.role.id !== 3) {
                     const { token } = resp
                     localStorage.setItem("userData", JSON.stringify(resp.userData));
                     localStorage.setItem("token", token);
                     login(resp.userData)
-                    message.success(`Bienvenido`)
+                    message.success("Bienvenido")
                 }else{
-                    message.warning("Su usuario ha sido bloqueado, por favor contáctese con el administrador del sistema")
+                    message.warning("Su usuario no tiene acceso al sistema, por favor contáctese con el administrador del sistema")
                 }
 
             } else {
@@ -48,8 +37,8 @@ export const FormLogin = () => {
             setLoading(false);
         } catch (error) {
             console.error('El error es: ' + error);
-        }
-    }
+        }
+    }
     return (
 
         <Card title="Inicio de Sesión">

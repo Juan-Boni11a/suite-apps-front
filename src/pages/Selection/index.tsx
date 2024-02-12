@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Typography } from "antd";
+import { Button, Card, Col, Input, Row, Typography } from "antd";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -52,17 +52,27 @@ function SelectionPage() {
 
   return (
     <div style={{ marginTop: 20, paddingLeft: 24, paddingRight: 24 }}>
-      <Typography.Title>Bienvenido</Typography.Title>
-      <Input onChange={handleChangeInput} placeholder="Ingrese el nombre de la app que desea usar..." style={{ marginBottom: 16 }} />
-
+      <Row justify="space-between" align="middle">
+        <Col>
+          <Typography.Title>Bienvenido</Typography.Title>
+          <Input onChange={handleChangeInput} placeholder="Ingrese el nombre de la app que desea usar..." style={{ marginBottom: 16 }} />
+        </Col>
+        {isAdmin &&
+          <Col>
+            <Button type="primary" onClick={() => navigate("/usersManagement")}>
+              Administración de Usuarios
+            </Button>
+          </Col>
+        }
+      </Row>
+  
       <Row style={{ marginLeft: 20, marginRight: 20 }}>
         {searchResults && searchResults.length > 0 && searchResults.map((app: any) =>
-          <Col key={app.label} span={12} style={{ paddingBottom: 36, paddingRight: 12, cursor: 'pointer' }} >
+          <Col key={app.label} span={12} style={{ paddingBottom: 36, paddingRight: 12, cursor: 'pointer' }}>
             <Card onClick={app.onClick}>
-              <Row style={{ display: 'flex', alignItems: 'center' }} >
+              <Row style={{ display: 'flex', alignItems: 'center' }}>
                 <Col span={8}>
                   <img src={app.image} alt="" style={{ height: 260, width: '100%' }} />
-
                 </Col>
                 <Col span={16}>
                   <Typography.Title>{app.label}</Typography.Title>
@@ -70,28 +80,11 @@ function SelectionPage() {
               </Row>
             </Card>
           </Col>
-
         )}
-
-
-        {isAdmin &&
-          <Col span={24}>
-            <Card onClick={() => navigate("/usersManagement")} >
-              <Row style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} >
-                <Col span={8}>
-                  <img src="./hmLogin.png" alt="" style={{ height: 260, width: '100%' }} />
-                </Col>
-                <Col span={16}>
-                  <Typography.Title>Administración de Usuarios</Typography.Title>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        }
-
       </Row>
     </div>
-  )
+  );
+  
 }
 
 export default SelectionPage;

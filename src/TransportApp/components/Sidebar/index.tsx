@@ -117,21 +117,22 @@ const MenuOptions = ({ theme = "dark", closeModal = () => console.log('Default c
                             className="navbar-brand"
                             onClick={() => goToPage("/transports/parasMovilizacion")}
                         >
-                            Paras de movilización
+                            Tipo Persona
                         </Menu.Item>
-                        <Menu.Item
-                            key="11"
-                            className="navbar-brand"
-                            onClick={() => goToPage("/transports/vigenciasMovilizacion")}
-                        >
-                            Vigencias de movilización
-                        </Menu.Item>
+                       
                         <Menu.Item
                             key="13"
                             className="navbar-brand"
                             onClick={() => goToPage("/transports/actividades")}
                         >
                             Actividades
+                        </Menu.Item>
+                        <Menu.Item
+                            key="11"
+                            className="navbar-brand"
+                            onClick={() => goToPage("/transports/vigenciasMovilizacion")}
+                        >
+                            
                         </Menu.Item>
 
                     </>

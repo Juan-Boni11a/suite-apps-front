@@ -70,7 +70,7 @@ function Dashboard() {
             <h3>Dashboard</h3>
             <Row>
 
-                <Col span={24}>
+                <Col span={8}>
                     <Card title="Noticias">
                         {loadingData ? <Spin /> :
                            <PieChart data={newsData} />

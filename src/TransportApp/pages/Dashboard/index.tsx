@@ -228,7 +228,7 @@ function Dashboard() {
 
                 </Col>
 
-                <Col span={12}>
+                <Col span={8}>
                     <Card title="Conductores">
                         {loadingDdata ? <Spin /> :
                             <PieChart data={driversData} />
@@ -236,7 +236,7 @@ function Dashboard() {
                     </Card>
 
                 </Col>
-                <Col span={12}>
+                <Col span={8}>
                     <Card title="Vehículos">
 
                         {loadingVdata ? <Spin /> :

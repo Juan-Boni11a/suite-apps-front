@@ -15,7 +15,7 @@ import * as dayjs from 'dayjs'
 
 
 const currentActivities = [
-    { label: 'Ingreso de datos', key: 1, value: 'Ingreso de datos' }
+    { label: 'Registro de Mantenimiento', key: 1, value: 'Registro de Mantenimiento' }
 ]
 
 const actions = [
@@ -287,11 +287,11 @@ function SolicitudMantenimientoForm({ selectedRequest, handleModal, handleRefres
             </Form.Item>
 
             <Form.Item label="Actividad actual" name="currentActivity">
-                <Select options={currentActivities} />
+                <Select disabled options={currentActivities} defaultValue={"Registro de Mantenimiento"} />
             </Form.Item>
 
             <Form.Item label="Responsable actual" name="currentResponsible">
-                <Select options={users} defaultValue={user && user.id} />
+                <Select disabled options={users} defaultValue={user && user.id} />
             </Form.Item>
 
             <Form.Item label="Fecha de mantenimiento" name="date">

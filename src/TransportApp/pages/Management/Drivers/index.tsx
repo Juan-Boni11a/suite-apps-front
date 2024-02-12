@@ -164,7 +164,7 @@ function DriversPage() {
                     setSelectedUser(null)
                     setShowDetails(false)
 
-                }} footer={null} width={"30%"}>
+                }} footer={null} width={"40%"}>
                     {selectedUser !== null &&
                         <Row justify="center">
                             <Col span={8}>

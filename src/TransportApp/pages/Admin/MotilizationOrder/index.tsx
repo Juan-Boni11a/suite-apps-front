@@ -204,10 +204,10 @@ const MovilizationOrderPage = () => {
                         onClick={() => handleCheckRequest(record)}
                         type="primary"
                         style={{ marginBottom: 16 }}
+                        disabled={record.status !== "PENDING"} // Deshabilitar si el estado no es "PENDIENTE"
                     >
                         {record.driver === null && record.status !== "REJECTED" ? "Completar" : "Editar"}
                     </Button>
-
                 ),
             }
         )
