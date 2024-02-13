@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Form, Input, Row, Select, Upload, message } fr
 import { postData } from "../../../services/common/postData";
 import { useState } from "react";
 import { uploadFileToCloudinary } from "../../../HemerotecApp/utils/uploader";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 
 const getBase64 = (img: any, callback: any) => {

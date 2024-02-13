@@ -10,7 +10,7 @@ import { transformDate, transformTime } from "../../../../utils/general";
 import { putData } from "../../../../services/common/putData";
 import { postData } from "../../../../services/common/postData";
 import MaintenanceLogs from "../../Logs/Maintenances";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 
 

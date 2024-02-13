@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Form, Row, Select, Typography, message } from 
 import { useEffect, useLayoutEffect, useState } from "react"
 import { getData } from "../../../services/common/getData"
 import { postData } from "../../../services/common/postData"
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import { putData } from "../../../services/common/putData"
 import { transformDate } from "../../../utils/general"
 

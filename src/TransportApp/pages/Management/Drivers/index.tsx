@@ -1,6 +1,6 @@
 import { Button, Card, Col, Descriptions, Form, Image, Modal, Row, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import 'dayjs/locale/es'
 import { putData } from "../../../services/common/putData";
 import { getData } from "../../../../services/common/getData";

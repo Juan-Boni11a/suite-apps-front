@@ -12,7 +12,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { uploadFileToCloudinary } from "../../utils/uploader";
 import { deleteData } from "../../../services/deleteData";
 
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import 'dayjs/locale/es'
 import { AuthContext } from "../../../context/AuthContext";
 

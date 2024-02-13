@@ -8,7 +8,7 @@ import { transformDate, transformTime } from "../../../../utils/general";
 import { AuthContext } from "../../../../context/AuthContext";
 import { postData } from "../../../../services/common/postData";
 import MovilizationLogs from "../../Logs/Movilizations";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import { filterByRestrictions } from "../../../utils/vehicles";
 import MovilizationDetails from "../../MovilizationDetails";
 

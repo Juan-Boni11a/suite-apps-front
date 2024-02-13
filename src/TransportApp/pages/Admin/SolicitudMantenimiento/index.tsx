@@ -12,7 +12,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import SolicitudManetenimientoForm from '../../../components/Forms/Admin/SolicitudMantenimientoForm'
 import { getData } from '../../../../services/common/getData';
 import { AuthContext } from '../../../../context/AuthContext';
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import 'dayjs/locale/es'
 
 dayjs.locale('es')

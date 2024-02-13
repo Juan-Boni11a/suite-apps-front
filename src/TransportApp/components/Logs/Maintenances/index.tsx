@@ -1,7 +1,7 @@
 import { Divider, List } from "antd";
 import { useEffect, useState } from "react";
 import { getData } from "../../../../services/common/getData";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import 'dayjs/locale/es'
 
 dayjs.locale('es')

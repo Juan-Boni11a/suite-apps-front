@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getData } from "../../../services/common/getData";
 import UserForm from "../../../components/Forms/UserForm";
 import RoleAssignmentForm from "../../../components/Forms/RoleAssignmentForm";
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import 'dayjs/locale/es'
 import { useNavigate } from "react-router-dom";
 import { putData } from "../../../services/common/putData";
