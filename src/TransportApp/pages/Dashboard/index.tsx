@@ -133,77 +133,21 @@ function Dashboard() {
             setLoadingDdata(false)
         }
 
-        //inicio
-        const requestDriversInMovilization = await getData('api/users/driversInMovilization')
-        console.log('request dim', requestDriversInMovilization)
-        if (Array.isArray(requestDriversInMovilization) && requestDriversInMovilization.length > 0) {
-
-            requestDriversInMovilization.map((r) => {
-                if (Array.isArray(r)) {
-
-                    let objetosCombinados = [];
-    
-                    for (let i = 0; i < r.length; i += 2) {
-                        if (i + 1 < r.length) {
-                            let objetoCombinado = { ...r[i], ...r[i + 1] };
-                            objetosCombinados.push(objetoCombinado);
-                        } else {
-                            // Si hay un número impar de objetos, el último objeto se agrega sin combinar
-                            objetosCombinados.push(r[i]);
-                        }
-                    }
-    
-                    console.log('objetos combinados', objetosCombinados)
-                    setDriversInMovilization(objetosCombinados)
-                    setLoadingDriversInMovilization(false)
-                } else {
-                    setLoadingDriversInMovilization(false)
-                }
-            })
-        } else {
-            setLoadingDriversInMovilization(false)
-        }
-
-
-        setLoadingDriversInMovilization(true)
-        const requestDriversInMaintenance = await getData('api/users/driversInMaintenance')
-        console.log('request man', requestDriversInMaintenance)
-        if (Array.isArray(requestDriversInMaintenance) && requestDriversInMaintenance.length > 0) {
-
-            requestDriversInMaintenance.map((r) => {
-                if (Array.isArray(r)) {
-
-                    let objetosCombinados: any = [];
-
-                    for (let i = 0; i < r.length; i += 2) {
-                        if (i + 1 < r.length) {
-                            let objetoCombinado = { ...r[i], ...r[i + 1] };
-                            objetosCombinados.push(objetoCombinado);
-                        } else {
-                            // Si hay un número impar de objetos, el último objeto se agrega sin combinar
-                            objetosCombinados.push(r[i]);
-                        }
-                    }
-
-                    console.log('objetos combinados', objetosCombinados)
-                    setDriversInMovilization((prevState: any) => [...prevState, ...objetosCombinados])
-                    setLoadingDriversInMovilization(false)
-                } else {
-                    setLoadingDriversInMovilization(false)
-                }
-            })
-
-
-
-        } else {
-            setLoadingDriversInMovilization(false)
-        }
-        //fin
-
-        const requestTodayMovilizationRequests = await getData('api/movilizationRequests/today')
+        const requestTodayMovilizationRequests = await getData('api/movilizationRequests')
         if (Array.isArray(requestTodayMovilizationRequests)) {
-            setTodayMovilizations(requestTodayMovilizationRequests)
+            
+            if(requestTodayMovilizationRequests.length > 0){
+                const now = new Date();
+                const filteredRequests = requestTodayMovilizationRequests.filter((request) => {
+                    const emitDateTime = new Date(request.emitDate + ' ' + request.emitHour)
+                    const expiryDateTime = new Date(request.expiryDate + ' ' + request.expiryHour) 
+                    return now >= emitDateTime && now <= expiryDateTime  
+                });
+                setTodayMovilizations(filteredRequests)
+                setLoadingTodayMovilizations(false)
+            }
             setLoadingTodayMovilizations(false)
+            
         }
 
         const requestTodayMaintenances = await getData('api/maintenanceRequests/today')
@@ -250,4 +194,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Dashboard;
