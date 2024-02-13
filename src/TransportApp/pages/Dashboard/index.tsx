@@ -133,7 +133,7 @@ function Dashboard() {
             setLoadingDdata(false)
         }
 
-        /*
+        //inicio
         const requestDriversInMovilization = await getData('api/users/driversInMovilization')
         console.log('request dim', requestDriversInMovilization)
         if (Array.isArray(requestDriversInMovilization) && requestDriversInMovilization.length > 0) {
@@ -198,7 +198,7 @@ function Dashboard() {
         } else {
             setLoadingDriversInMovilization(false)
         }
-        */
+        //fin
 
         const requestTodayMovilizationRequests = await getData('api/movilizationRequests/today')
         if (Array.isArray(requestTodayMovilizationRequests)) {
