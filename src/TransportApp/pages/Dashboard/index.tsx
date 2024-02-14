@@ -135,19 +135,19 @@ function Dashboard() {
 
         const requestTodayMovilizationRequests = await getData('api/movilizationRequests')
         if (Array.isArray(requestTodayMovilizationRequests)) {
-            
-            if(requestTodayMovilizationRequests.length > 0){
+
+            if (requestTodayMovilizationRequests.length > 0) {
                 const now = new Date();
                 const filteredRequests = requestTodayMovilizationRequests.filter((request) => {
                     const emitDateTime = new Date(request.emitDate + ' ' + request.emitHour)
-                    const expiryDateTime = new Date(request.expiryDate + ' ' + request.expiryHour) 
-                    return now >= emitDateTime && now <= expiryDateTime && request.status==='ACCEPTED'
+                    const expiryDateTime = new Date(request.expiryDate + ' ' + request.expiryHour)
+                    return now >= emitDateTime && now <= expiryDateTime && request.status === 'ACCEPTED'
                 });
                 setTodayMovilizations(filteredRequests)
                 setLoadingTodayMovilizations(false)
             }
             setLoadingTodayMovilizations(false)
-    }
+        }
 
         const requestTodayMaintenances = await getData('api/maintenanceRequests/today')
         if (Array.isArray(requestTodayMaintenances)) {
@@ -165,10 +165,15 @@ function Dashboard() {
             <h3>Dashboard</h3>
             <Row>
                 <Col span={24}>
-                    <Card title="Conductores en servicio">
-                        <Table columns={columns} dataSource={[...todayMovilizations, ...todayMaintenances]} loading={loadingTodayMovilizations && loadingTodayMaintenances} />
+                    <Card title="Conductores en Movilización">
+                        <Table columns={columns} dataSource={todayMovilizations} loading={loadingTodayMovilizations} />
                     </Card>
+                </Col>
 
+                <Col span={24}>
+                    <Card title="Conductores en Mantenimiento">
+                        <Table columns={columns} dataSource={todayMaintenances} loading={loadingTodayMaintenances} />
+                    </Card>
                 </Col>
 
                 <Col span={8}>
@@ -193,4 +198,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Dashboard;
