@@ -141,14 +141,13 @@ function Dashboard() {
                 const filteredRequests = requestTodayMovilizationRequests.filter((request) => {
                     const emitDateTime = new Date(request.emitDate + ' ' + request.emitHour)
                     const expiryDateTime = new Date(request.expiryDate + ' ' + request.expiryHour) 
-                    return now >= emitDateTime && now <= expiryDateTime  
+                    return now >= emitDateTime && now <= expiryDateTime && request.status==='ACCEPTED'
                 });
                 setTodayMovilizations(filteredRequests)
                 setLoadingTodayMovilizations(false)
             }
             setLoadingTodayMovilizations(false)
-            
-        }
+    }
 
         const requestTodayMaintenances = await getData('api/maintenanceRequests/today')
         if (Array.isArray(requestTodayMaintenances)) {
