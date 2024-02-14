@@ -78,7 +78,45 @@ function Dashboard() {
         }
 
     ];
+    
+    const maColumns = [
+        {
+            title: "Nombre",
+            key: "a",
+            render: (record: any) => <>
+                {'driver' in record && <span>{record.driver.name}</span>}
+            </>
+        },
+        {
+            title: "Apellido",
+            key: "b",
+            render: (record: any) => <>
+                {'driver' in record && <span>{record.driver.lastname}</span>}
+            </>
+        },
+        {
+            title: "Número de teléfono",
+            key: 'c',
+            render: (record: any) => <>
+                {'driver' in record && <span>{record.driver.phone_number}</span>}
+            </>
+        },
+        {
+            title: 'Fecha de mantenimiento',
+            key: "y",
+            render: (record: any) => <>
+                {'date' in record && <span>{record.date + "-" + record.hour}</span>}
+            </>
+        },
+        {
+            title: 'Lugar de mantenimiento',
+            key: "k",
+            render: (record: any) => <>
+                {'serviceStation' in record && <span>{record.serviceStation.name}</span>}
+            </>
+        },
 
+    ];
 
     async function initialRequest() {
 
@@ -172,7 +210,7 @@ function Dashboard() {
 
                 <Col span={24}>
                     <Card title="Conductores en Mantenimiento">
-                        <Table columns={columns} dataSource={todayMaintenances} loading={loadingTodayMaintenances} />
+                        <Table columns={maColumns} dataSource={todayMaintenances} loading={loadingTodayMaintenances} />
                     </Card>
                 </Col>
 
