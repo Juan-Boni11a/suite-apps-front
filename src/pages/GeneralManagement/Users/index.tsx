@@ -146,20 +146,29 @@ function UsersPage() {
             key: 'X',
             render: (record: any) => (
                 <>
-                    <Button style={{ display: 'block', marginBottom: 12}} type="primary" onClick={() => {
+                <Button
+                    style={{ display: 'block', marginBottom: 12}}
+                    type="primary"
+                    onClick={() => {
                         console.log('r', record)
                         setSelectedUser(record)
                         handleRoleModal(record)
-                    }}>
-                        Asignar rol
-                    </Button>
-                    <Button type="primary" onClick={() => {
+                    }}
+                    disabled={record.role && record.role.id === 1 && record.active} // Deshabilitar si el rol es "admin" y está activo
+                >
+                    Asignar rol
+                </Button>
+                <Button
+                    type="primary"
+                    onClick={() => {
                         console.log('r', record)
                         handleChangeState(record)
-                    }}>
-                        {record.active ? 'Desactivar usuario' : 'Activar usuario' }
-                    </Button>
-                </>
+                    }}
+                    disabled={record.role && record.role.id === 1 && record.active} // Deshabilitar si el rol es "admin" y está activo
+                >
+                    {record.active ? 'Desactivar usuario' : 'Activar usuario' }
+                </Button>
+            </>
             )
         }
     ];
