@@ -198,7 +198,7 @@ const RegisterNoticiasForm = () => {
                 tendencia
             };
             setOpinions([...opinions, newOpinion]);
-            form.resetFields(['name', 'opinion', 'tendencia']);
+            form.resetFields(['name', 'opinion']);
         }
     };
 
