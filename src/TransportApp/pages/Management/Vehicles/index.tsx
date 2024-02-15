@@ -4,6 +4,8 @@ import { Button, Card, Form, Input, Modal, Row, Select, Table, message } from "a
 import { postData } from "../../../../services/common/postData"
 import { putData } from "../../../../services/common/putData"
 
+import { plateRgx } from "../../../../utils/exp"
+
 
 
 
@@ -46,23 +48,31 @@ function VehicleForm({handleModal, handleRefresh, form, selectedRecord}: any){
 
     return(
         <Form form={form} onFinish={handleFinish}>
-            <Form.Item label="Placa" name="plate" rules={[{ required: true, message: 'Informació requerida' }]} >
+            <Form.Item 
+                label="Placa" 
+                name="plate" 
+                rules={[
+                    { required: true, message: 'Información requerida' },
+                    { pattern: plateRgx, message: "La placa es incorrecta" }
+                ]} 
+                
+            >
+                <Input />
+            </Form.Item>
+            <Form.Item label="Marca" name="brand" rules={[{ required: true, message: 'Información requerida' }]} >
                 <Input />
             </Form.Item>
-            <Form.Item label="Marca" name="brand" rules={[{ required: true, message: 'Informació requerida' }]} >
+            <Form.Item label="Modelo" name="model" rules={[{ required: true, message: 'Información requerida' }]} >
                 <Input />
             </Form.Item>
-            <Form.Item label="Modelo" name="model" rules={[{ required: true, message: 'Informació requerida' }]} >
+            <Form.Item label="Color" name="color" rules={[{ required: true, message: 'Información requerida' }]} >
                 <Input />
             </Form.Item>
-            <Form.Item label="Color" name="color" rules={[{ required: true, message: 'Informació requerida' }]} >
-                <Input />
-            </Form.Item>
-            <Form.Item label="Motor" name="engine" rules={[{ required: true, message: 'Informació requerida' }]} >
+            <Form.Item label="Motor" name="engine" rules={[{ required: true, message: 'Información requerida' }]} >
                 <Input />
             </Form.Item>
 
-            <Form.Item label="No. Matrícula" name="enrollment" rules={[{ required: true, message: 'Informació requerida' }]} >
+            <Form.Item label="No. Matrícula" name="enrollment" rules={[{ required: true, message: 'Información requerida' }]} >
                 <Input />
             </Form.Item>
 
