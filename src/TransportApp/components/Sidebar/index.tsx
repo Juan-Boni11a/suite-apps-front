@@ -132,7 +132,7 @@ const MenuOptions = ({ theme = "dark", closeModal = () => console.log('Default c
                             className="navbar-brand"
                             onClick={() => goToPage("/transports/vigenciasMovilizacion")}
                         >
-                            
+                            Vigencias
                         </Menu.Item>
 
                     </>
