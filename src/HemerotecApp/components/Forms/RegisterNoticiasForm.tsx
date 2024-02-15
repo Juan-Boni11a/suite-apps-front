@@ -418,9 +418,7 @@ const RegisterNoticiasForm = () => {
                         <Form.Item label="Opinión" name="opinion">
                             <Input.TextArea />
                         </Form.Item>
-                        <Form.Item label="Tendencia" name="tendencia">
-                            <Input.TextArea />
-                        </Form.Item>
+                       
                         <Form.Item>
                             <Button type="primary" onClick={handleAddOpinion}>
                                 Añadir opinión
