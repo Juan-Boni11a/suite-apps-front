@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Row, Select, Typography, message } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Row, Select, Spin, Typography, message } from "antd";
 import DriversSelector from "../../Modals/DriversSelector";
 import { useContext, useEffect, useState } from "react";
 import CarsSelector from "../../Modals/CarsSelector";
@@ -8,7 +8,7 @@ import { transformDate, transformTime } from "../../../../utils/general";
 import { AuthContext } from "../../../../context/AuthContext";
 import { postData } from "../../../../services/common/postData";
 import MovilizationLogs from "../../Logs/Movilizations";
-import dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { filterByRestrictions } from "../../../utils/vehicles";
 import MovilizationDetails from "../../MovilizationDetails";
 
@@ -41,8 +41,6 @@ const statusList = [
 
 function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, form }: any) {
 
-    console.log('srrr', selectedRequest)
-
 
     const { user }: any = useContext(AuthContext)
 
@@ -68,6 +66,8 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
 
     const [submitting, setSubmitting] = useState(false)
 
+    const [loadingData, setLoadingData] = useState(false)
+
     function handleDriversModal() {
         setShowDriversModal(!showDriversModal)
     }
@@ -85,6 +85,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
     }, [])
 
     const initialRequest = async () => {
+        setLoadingData(true)
         const usersRequest = await getData('api/users?includeInactive=' + false)
         console.log('ur', usersRequest)
         if (Array.isArray(usersRequest)) {
@@ -98,65 +99,71 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
             setUsers(usersToSelect)
         }
 
-        const driversRequest = await getData('api/users/busyDrivers')
-        if ('freeDrivers' in driversRequest) {
-            const driversToModal = driversRequest.freeDrivers.map((driver: any) => {
-                return {
-                    ...driver,
-                    fullName: driver.name + " " + driver.lastname,
-                    status: 'Disponible',
-                    ciExpiry: '15/02/2024'
-                }
-            })
-            setDrivers(driversToModal)
-        }
-
-        const typesRequest = await getData('api/movilizationTypes')
-        console.log('ur', typesRequest)
-        if (Array.isArray(typesRequest)) {
-            const typesToSelect = typesRequest.map((mt: any) => {
-                return {
-                    ...mt,
-                    label: mt.name,
-                    value: mt.id
-                }
-            })
-            setMovilizationTypes(typesToSelect)
-        }
-
-        const toRequest = await getData('api/movilizationTo')
-        console.log('ur', toRequest)
-        if (Array.isArray(toRequest)) {
-            const toSelect = toRequest.map((mto: any) => {
-                return {
-                    ...mto,
-                    label: mto.name,
-                    value: mto.id
-                }
-            })
-            setMovilizationTos(toSelect)
-        }
-
-        const validitiesRequest = await getData('api/movilizationValidities')
-        console.log('ur', validitiesRequest)
-        if (Array.isArray(validitiesRequest)) {
-            const validitiesToSelect = validitiesRequest.map((vd: any) => {
-                return {
-                    ...vd,
-                    label: vd.name,
-                    value: vd.id
-                }
-            })
-            setMovilizationValidities(validitiesToSelect)
-        }
+        if (isAdmin) {
+            const driversRequest = await getData('api/users/busyDrivers')
+            if ('freeDrivers' in driversRequest) {
+                const driversToModal = driversRequest.freeDrivers.map((driver: any) => {
+                    return {
+                        ...driver,
+                        fullName: driver.name + " " + driver.lastname,
+                        status: 'Disponible',
+                        ciExpiry: '15/02/2024'
+                    }
+                })
+                setDrivers(driversToModal)
+            }
 
 
-        const vehiclesRequest = await getData('api/vehicles/busy')
-        if ('freeVehicles' in vehiclesRequest) {
-            const result = filterByRestrictions(vehiclesRequest.freeVehicles, selectedRequest.emitDate, selectedRequest.emitHour, selectedRequest.expiryDate, selectedRequest.expiryHour)
-            console.log('result', result)
-            setVehicles(result)
+            const vehiclesRequest = await getData('api/vehicles/busy')
+            if ('freeVehicles' in vehiclesRequest) {
+                const result = filterByRestrictions(vehiclesRequest.freeVehicles, selectedRequest.emitDate, selectedRequest.emitHour, selectedRequest.expiryDate, selectedRequest.expiryHour)
+                setVehicles(result)
+                setLoadingData(false)
+            }
+
+        } else {
+
+            const typesRequest = await getData('api/movilizationTypes')
+            console.log('ur', typesRequest)
+            if (Array.isArray(typesRequest)) {
+                const typesToSelect = typesRequest.map((mt: any) => {
+                    return {
+                        ...mt,
+                        label: mt.name,
+                        value: mt.id
+                    }
+                })
+                setMovilizationTypes(typesToSelect)
+            }
+
+            const toRequest = await getData('api/movilizationTo')
+            console.log('ur', toRequest)
+            if (Array.isArray(toRequest)) {
+                const toSelect = toRequest.map((mto: any) => {
+                    return {
+                        ...mto,
+                        label: mto.name,
+                        value: mto.id
+                    }
+                })
+                setMovilizationTos(toSelect)
+            }
+
+            const validitiesRequest = await getData('api/movilizationValidities')
+            console.log('ur', validitiesRequest)
+            if (Array.isArray(validitiesRequest)) {
+                const validitiesToSelect = validitiesRequest.map((vd: any) => {
+                    return {
+                        ...vd,
+                        label: vd.name,
+                        value: vd.id
+                    }
+                })
+                setMovilizationValidities(validitiesToSelect)
+                setLoadingData(false)
+            }
         }
+
     }
 
 
@@ -186,7 +193,7 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
             }
 
 
-            if(values.status === "REJECTED"){
+            if (values.status === "REJECTED") {
                 cleanValues = {
                     ...cleanValues,
                     rejectedDue: values.rejectedDue
@@ -264,8 +271,6 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
 
     const isAdmin = user.role.id !== 2 ? true : false
 
-    console.log('s', selectedRequest)
-
 
     const disabledDate = (current: any) => {
         return current && dayjs(current).isBefore(dayjs(), 'day');
@@ -273,15 +278,15 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
 
 
     const emitDateValue = Form.useWatch('emitDate', form)
-    
+
     const disabledEmitHours = () => {
         const currentHour = dayjs().hour();
-      
+
         if (!emitDateValue || !dayjs(emitDateValue).isSame(dayjs(), 'day')) {
-          // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
-          return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
+            // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
+            return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
         }
-      
+
         // Deshabilitar todas las horas antes de la actual, antes de las 8 am y después de las 6 pm
         return [...Array(currentHour).keys(), ...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
     };
@@ -292,12 +297,12 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
 
     const disabledExpiryHours = () => {
         const currentHour = dayjs().hour();
-      
+
         if (!expiryDateValue || !dayjs(expiryDateValue).isSame(dayjs(), 'day')) {
-          // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
-          return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
+            // Si no hay fecha seleccionada o la fecha seleccionada no es el día actual, devolver todas las horas
+            return [...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
         }
-      
+
         // Deshabilitar todas las horas antes de la actual, antes de las 8 am y después de las 6 pm
         return [...Array(currentHour).keys(), ...Array(8).keys(), ...Array.from({ length: 18 }, (_, index) => index + 19)];
     };
@@ -338,152 +343,154 @@ function MovilizationRequestForm({ selectedRequest, handleModal, handleRefresh, 
 
     return (
         <>
-            {selectedRequest && 
-            (
-                <div style={{ marginTop: 30, marginBottom: 30}}>
-                <MovilizationDetails movilization={selectedRequest} />
-                </div>
-            )}
-            <Form form={form} onFinish={handleSubmit} >
-                {isAdmin && (
-                    <>
-                        <Form.Item label="Estado" name="status">
-                            <Select options={statusList} />
-                        </Form.Item>
+            {selectedRequest &&
+                (
+                    <div style={{ marginTop: 30, marginBottom: 30 }}>
+                        <MovilizationDetails movilization={selectedRequest} />
+                    </div>
+                )}
+            {loadingData ? <Spin /> : (
+                <Form form={form} onFinish={handleSubmit} >
+                    {isAdmin && (
+                        <>
+                            <Form.Item label="Estado" name="status">
+                                <Select options={statusList} />
+                            </Form.Item>
 
 
-                        {statusValue === "REJECTED" && (
-                            <Form.Item label="Razón" name="rejectedDue">
+                            {statusValue === "REJECTED" && (
+                                <Form.Item label="Razón" name="rejectedDue">
+                                    <Input />
+                                </Form.Item>
+                            )}
+
+                            {statusValue !== "REJECTED" && (
+                                <>
+                                    <Form.Item label="Iniciador" name="initiatorId">
+                                        <Input disabled defaultValue={user && (user.name + " " + user.lastname)} />
+                                    </Form.Item>
+
+                                    <Form.Item label="Actividad actual" name="currentActivity" >
+                                        <Select options={activities} />
+                                    </Form.Item>
+
+
+                                    <Form.Item label="Responsable actual" name="currentResponsible">
+                                        <Select options={users} defaultValue={user && user.id} />
+                                    </Form.Item>
+
+                                    <Form.Item label="Conductor" name="driver">
+                                        <Input onClick={handleDriversModal} />
+                                    </Form.Item>
+
+                                    <Typography.Text>Vehículo</Typography.Text>
+                                    <Form.Item label="No. Placa" name="plate">
+                                        <Input onClick={handleCarsModal} />
+                                    </Form.Item>
+                                    <Form.Item label="Marca" name="brand">
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item label="Modelo" name="model">
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item label="Color" name="color">
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item label="Motor" name="engine">
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item label="No. Matrícula" name="enrollment">
+                                        <Input disabled />
+                                    </Form.Item>
+                                </>
+                            )}
+
+
+                            {selectedRequest && (
+                                <MovilizationLogs requestId={selectedRequest.id} />
+                            )}
+                        </>
+                    )}
+
+
+
+                    {!isAdmin && (
+                        <>
+                            <Form.Item label="Tipo de movilización" name="movilizationType" >
+                                <Select options={movilizationTypes} />
+                            </Form.Item>
+
+
+                            <Form.Item label="Para" name="to">
+                                <Select options={movilizationTos} />
+                            </Form.Item>
+
+
+                            <Form.Item label="Vigente de" name="validity">
+                                <Select options={movilizationValidities} />
+                            </Form.Item>
+                            <Typography.Text>Datos de Origen</Typography.Text>
+
+                            <Form.Item label="Lugar" name="emitPlace">
                                 <Input />
                             </Form.Item>
-                        )}
 
-                        {statusValue !== "REJECTED" && (
-                            <>
-                                <Form.Item label="Iniciador" name="initiatorId">
-                                    <Input disabled defaultValue={user && (user.name + " " + user.lastname)} />
-                                </Form.Item>
+                            <Form.Item label="Fecha" name="emitDate">
+                                <DatePicker
+                                    onChange={handleStartDateChange}
+                                    disabledDate={disabledDate}
+                                />
+                            </Form.Item>
 
-                                <Form.Item label="Actividad actual" name="currentActivity" >
-                                    <Select  options={activities}  />
-                                </Form.Item>
-
-
-                                <Form.Item label="Responsable actual" name="currentResponsible">
-                                    <Select options={users} defaultValue={user && user.id} />
-                                </Form.Item>
-
-                                <Form.Item label="Conductor" name="driver">
-                                    <Input onClick={handleDriversModal} />
-                                </Form.Item>
-
-                                <Typography.Text>Vehículo</Typography.Text>
-                                <Form.Item label="No. Placa" name="plate">
-                                    <Input onClick={handleCarsModal} />
-                                </Form.Item>
-                                <Form.Item label="Marca" name="brand">
-                                    <Input disabled />
-                                </Form.Item>
-                                <Form.Item label="Modelo" name="model">
-                                    <Input disabled />
-                                </Form.Item>
-                                <Form.Item label="Color" name="color">
-                                    <Input disabled />
-                                </Form.Item>
-                                <Form.Item label="Motor" name="engine">
-                                    <Input disabled />
-                                </Form.Item>
-                                <Form.Item label="No. Matrícula" name="enrollment">
-                                    <Input disabled />
-                                </Form.Item>
-                            </>
-                        )}
+                            <Form.Item label="Hora" name="emitHour">
+                                <DatePicker
+                                    picker="time"
+                                    disabledHours={disabledEmitHours}
+                                    disabledMinutes={disabledMinutes}
+                                    disabledSeconds={disabledSeconds}
+                                />
+                            </Form.Item>
 
 
-                        {selectedRequest && (
-                            <MovilizationLogs requestId={selectedRequest.id} />
-                        )}
-                    </>
-                )}
+                            <Typography.Text>Datos de Destino</Typography.Text>
+
+                            <Form.Item label="Lugar" name="expiryPlace">
+                                <Input />
+                            </Form.Item>
+
+                            <Form.Item label="Fecha" name="expiryDate">
+                                <DatePicker disabledDate={disabledEndDate} />
+                            </Form.Item>
+
+                            <Form.Item label="Hora" name="expiryHour">
+                                <DatePicker
+                                    picker="time"
+                                    disabledHours={disabledExpiryHours}
+                                    disabledMinutes={disabledMinutes}
+                                    disabledSeconds={disabledSeconds}
+                                />
+                            </Form.Item>
 
 
 
-                {!isAdmin && (
-                    <>
-                        <Form.Item label="Tipo de movilización" name="movilizationType" >
-                            <Select options={movilizationTypes} />
-                        </Form.Item>
+                        </>
+                    )}
 
 
-                        <Form.Item label="Para" name="to">
-                            <Select options={movilizationTos} />
-                        </Form.Item>
+                    <Modal open={showDriversModal} footer={null} title="Máster de Conductores" onCancel={handleDriversModal}>
+                        <DriversSelector setSomeValues={setSomeValues} handleDriversModal={handleDriversModal} drivers={drivers} />
+                    </Modal>
 
+                    <Modal open={showCarsModal} footer={null} title="Vehículos" onCancel={handleCarsModal}>
+                        <CarsSelector setSomeValues={setSomeValues} handleCarsModal={handleCarsModal} vehicles={vehicles} />
+                    </Modal>
 
-                        <Form.Item label="Vigente de" name="validity">
-                            <Select options={movilizationValidities} />
-                        </Form.Item>
-                        <Typography.Text>Datos de Origen</Typography.Text>
+                    <Row justify="end">
+                        <Button htmlType="submit" type="primary" loading={submitting}>Guardar</Button>
+                    </Row>
+                </Form>
+            )}
 
-                        <Form.Item label="Lugar" name="emitPlace">
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item label="Fecha" name="emitDate">
-                            <DatePicker
-                                onChange={handleStartDateChange}
-                                disabledDate={disabledDate}
-                            />
-                        </Form.Item>
-
-                        <Form.Item label="Hora" name="emitHour">
-                            <DatePicker
-                                picker="time"
-                                disabledHours={disabledEmitHours}
-                                disabledMinutes={disabledMinutes}
-                                disabledSeconds={disabledSeconds}
-                            />
-                        </Form.Item>
-
-
-                        <Typography.Text>Datos de Destino</Typography.Text>
-
-                        <Form.Item label="Lugar" name="expiryPlace">
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item label="Fecha" name="expiryDate">
-                            <DatePicker disabledDate={disabledEndDate} />
-                        </Form.Item>
-
-                        <Form.Item label="Hora" name="expiryHour">
-                            <DatePicker
-                                picker="time"
-                                disabledHours={disabledExpiryHours}
-                                disabledMinutes={disabledMinutes}
-                                disabledSeconds={disabledSeconds}
-                            />
-                        </Form.Item>
-
-
-
-                    </>
-                )}
-
-
-
-                <Modal open={showDriversModal} footer={null} title="Máster de Conductores" onCancel={handleDriversModal}>
-                    <DriversSelector setSomeValues={setSomeValues} handleDriversModal={handleDriversModal} drivers={drivers} />
-                </Modal>
-
-                <Modal open={showCarsModal} footer={null} title="Vehículos" onCancel={handleCarsModal}>
-                    <CarsSelector setSomeValues={setSomeValues} handleCarsModal={handleCarsModal} vehicles={vehicles} />
-                </Modal>
-
-                <Row justify="end">
-                    <Button htmlType="submit" type="primary" loading={submitting}>Guardar</Button>
-                </Row>
-            </Form>
         </>
     )
 }
