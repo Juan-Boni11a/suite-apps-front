@@ -164,7 +164,7 @@ function Dashboard() {
             setLoadingDdata(false)
         }
 
-        const requestTodayMovilizationRequests = await getData('api/movilizationRequests')
+        const requestTodayMovilizationRequests = await getData('api/movilizationRequests/today')
         if (Array.isArray(requestTodayMovilizationRequests)) {
 
             if (requestTodayMovilizationRequests.length > 0) {
