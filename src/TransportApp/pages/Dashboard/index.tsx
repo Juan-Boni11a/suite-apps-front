@@ -68,13 +68,6 @@ function Dashboard() {
             render: (record: any) => <>
                 {'expiryDate' in record && <span>{record.expiryDate + "-" + record.expiryHour}</span>}
             </>
-        },
-        {
-            title: 'Fecha de mantenimiento',
-            key: "y",
-            render: (record: any) => <>
-                {'date' in record && <span>{record.date + "-" + record.hour}</span>}
-            </>
         }
 
     ];
