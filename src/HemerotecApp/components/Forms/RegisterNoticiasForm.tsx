@@ -191,11 +191,11 @@ const RegisterNoticiasForm = () => {
         const opinion = form.getFieldValue('opinion');
         const tendencia = form.getFieldValue('tendencia');
 
-        if (name && opinion && tendencia) {
+        if (name && opinion) {
             const newOpinion = {
                 name,
                 opinion,
-                tendencia
+                
             };
             setOpinions([...opinions, newOpinion]);
             form.resetFields(['name', 'opinion']);
@@ -213,7 +213,7 @@ const RegisterNoticiasForm = () => {
             dataIndex: 'opinion',
             key: 'opinion',
         },
-      
+       
     ];
 
 
