@@ -213,11 +213,7 @@ const RegisterNoticiasForm = () => {
             dataIndex: 'opinion',
             key: 'opinion',
         },
-        {
-            title: 'Tendencia',
-            dataIndex: 'tendencia',
-            key: 'tendencia',
-        },
+      
     ];
 
 
